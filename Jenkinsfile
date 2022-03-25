@@ -30,12 +30,12 @@ pipeline
                 }
             }
         }
-        /*stage("Quality gate") 
+        stage("Quality gate") 
         {
             steps {
                 waitForQualityGate abortPipeline: false, credentialsId: 'squser'
             }
-        }*/
+        }
         stage('build')
         {
             steps
@@ -119,7 +119,7 @@ stage ('download the artifacts from artifactory')
                               """{
                                 "files": [
                                   {
-                                    "pattern": "Rose-dotnet-app/*.zip",
+                                    "pattern": "Rose-dotnet-app/WebApp_${BUILD_NUMBER}.zip",
                                     "target": "D:/jfrog/"          
                                   }
                                ]
