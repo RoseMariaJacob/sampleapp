@@ -72,18 +72,7 @@ pipeline
                 }
         }
         
-        stage ('jfrog connection')
-        {
-            steps
-            {
-               rtServer (
-                 id: "Artifactory",
-                 
-                  bypassProxy: true,
-                   timeout: 300
-                        )
-            }
-        }
+        
         stage('file upload to jfrog')
         {
             steps{
