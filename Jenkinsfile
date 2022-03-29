@@ -25,7 +25,7 @@ pipeline
                     {
                         bat "\"${scannerHome}\\SonarScanner.MSBuild.exe\" begin /k:\"DotnetApp\""
                         
-			                  bat "dotnet build ${fpath}"    
+			                  bat "dotnet build ${sfpath}"    
                         bat "\"${scannerHome}\\SonarScanner.MSBuild.exe\" end"
                     }
                 }
