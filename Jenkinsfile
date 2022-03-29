@@ -124,7 +124,8 @@ stage ('download the artifacts from artifactory')
 	   steps
 		{
 		   
-			azureWebAppPublish appName: "${env.appName}", azureCredentialsId: 'Azure', resourceGroup: "${env.resourceGroup}"
+			//azureWebAppPublish appName: "${env.appName}", azureCredentialsId: 'Azure', resourceGroup: "${env.resourceGroup}"
+			azureWebAppPublish azureCredentialsId: params.credentials_Id , resourceGroup: params.ResourceGroup , appName: params.WebApp
 	    }
 	}
 	}
