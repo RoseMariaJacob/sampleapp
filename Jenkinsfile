@@ -1,5 +1,6 @@
-def fpath = "C:/ProgramData/jenkins/.jenkins/workspace/scm_dotnetapp/aspnet-core-dotnet-core/aspnet-core-dotnet-core.csproj"
-
+def sfpath = "C:/ProgramData/jenkins/.jenkins/workspace/scm_dotnetapp/aspnet-core-dotnet-core/aspnet-core-dotnet-core.csproj"
+def pfile = "aspnet-core-dotnet-core/bin/Debug/netcoreapp1.1/publish" 
+def jfrogTargetPath = "D:/jfrog/"
 
 pipeline 
 {
@@ -40,7 +41,8 @@ pipeline
         {
             steps
             {
-                bat "dotnet build ${fpath}"
+                echo "Builds the project and its dependencies"
+                bat "dotnet build ${sfpath}"
 		    
             }
         }
@@ -48,7 +50,7 @@ pipeline
         {
             steps
             {
-                bat "dotnet test ${fpath}"
+                bat "dotnet test ${sfpath}"
 		    
             }
         }
@@ -56,7 +58,7 @@ pipeline
         {
             steps
             {
-                bat "dotnet publish ${fpath}"
+                bat "dotnet publish ${sfpath}"
 		    
             }
         }
@@ -68,7 +70,7 @@ pipeline
                 echo "Deploying to stage environment for more tests!";
                 bat "del *.zip"
                 
-		            bat "tar.exe -a -c -f WebApp_${BUILD_NUMBER}.zip aspnet-core-dotnet-core/bin/Debug/netcoreapp1.1/publish"
+		bat "tar.exe -a -c -f WebApp_${BUILD_NUMBER}.zip ${pfile}"
                 }
         }
         
@@ -81,7 +83,7 @@ pipeline
                   spec: '''{
                    "files": [
                       {
-                      "pattern": "*.zip",
+                      "pattern": "${WORKSPACE}/WebApp_${BUILD_NUMBER}.zip",
                       "target": "Rose-dotnet-app"
                       }
                             ]
@@ -109,22 +111,14 @@ stage ('download the artifacts from artifactory')
                                 "files": [
                                   {
                                     "pattern": "Rose-dotnet-app/WebApp_${BUILD_NUMBER}.zip",
-                                    "target": "D:/jfrog/"          
+                                    "target": "${jfrogTargetPath}"          
                                   }
                                ]
                               }"""
       )
             }
         }
-  /*  stage('Extract ZIP') 
-	{
-	   steps
-	   {
-		   powershell '''
-		                  Expand-Archive 'D:/jfrog/dotnetapp.zip' -DestinationPath 'D:/home/'
-		              '''
-        } 
-	} */
+  
 	stage('Deploy to azure') 
 	{
 	   steps
@@ -135,4 +129,5 @@ stage ('download the artifacts from artifactory')
 	}
 	}
 }
+
 
