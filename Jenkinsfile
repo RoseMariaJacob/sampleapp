@@ -1,15 +1,15 @@
-def sfpath = "C:/ProgramData/jenkins/.jenkins/workspace/scm_dotnetapp/aspnet-core-dotnet-core/aspnet-core-dotnet-core.csproj"
-def pfile = "aspnet-core-dotnet-core/bin/Debug/netcoreapp1.1/publish" 
-def jfrogTargetPath = "D:/jfrog/"
+def solutionfilepath = "C:/ProgramData/jenkins/.jenkins/workspace/scm_dotnetapp/aspnet-core-dotnet-core/aspnet-core-dotnet-core.csproj"
+def publishedfile = "aspnet-core-dotnet-core/bin/Debug/netcoreapp1.1/publish" 
+def downloadPath = "D:/jfrog/"
 
 pipeline 
 {
-    environment
+   /* environment
     {
         appName = "rose-webapp"
         resourceGroup = "Training-rg"
         
-    }
+    } */
     agent any	
 	stages 
 	{
@@ -25,7 +25,7 @@ pipeline
                     {
                         bat "\"${scannerHome}\\SonarScanner.MSBuild.exe\" begin /k:\"DotnetApp\""
                         
-			                  bat "dotnet build ${sfpath}"    
+			                  bat "dotnet build ${solutionfilepath}"    
                         bat "\"${scannerHome}\\SonarScanner.MSBuild.exe\" end"
                     }
                 }
@@ -42,7 +42,7 @@ pipeline
             steps
             {
                 echo "Builds the project and its dependencies"
-                bat "dotnet build ${sfpath}"
+                bat "dotnet build ${solutionfilepath}"
 		    
             }
         }
@@ -50,7 +50,7 @@ pipeline
         {
             steps
             {
-                bat "dotnet test ${sfpath}"
+                bat "dotnet test ${solutionfilepath}"
 		    
             }
         }
@@ -58,7 +58,7 @@ pipeline
         {
             steps
             {
-                bat "dotnet publish ${sfpath}"
+                bat "dotnet publish ${solutionfilepath}"
 		    
             }
         }
@@ -70,7 +70,7 @@ pipeline
                 echo "Deploying to stage environment for more tests!";
                 bat "del *.zip"
                 
-		bat "tar.exe -a -c -f WebApp_${BUILD_NUMBER}.zip ${pfile}"
+		bat "tar.exe -a -c -f WebApp_${BUILD_NUMBER}.zip ${publishedfile}"
                 }
         }
         
@@ -111,7 +111,7 @@ stage ('download the artifacts from artifactory')
                                 "files": [
                                   {
                                     "pattern": "Rose-dotnet-app/WebApp_${BUILD_NUMBER}.zip",
-                                    "target": "${jfrogTargetPath}"          
+                                    "target": "${downloadPath}"          
                                   }
                                ]
                               }"""
